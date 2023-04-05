@@ -12,6 +12,7 @@ import { Role } from '../auth/entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -56,6 +57,20 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOneOrFail({
+        where: { email },
+        select: { email: true, password: true, id: true, lastName: true },
+      });
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException([
+        'There was a problem logging in. Check your email and password or create an account',
+      ]);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
