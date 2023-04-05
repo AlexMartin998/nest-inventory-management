@@ -12,6 +12,7 @@ import { Role } from './entities/role.entity';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthResponse } from './dto/auth-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(signupDto: RegisterDto): Promise<any> {
+  async register(signupDto: RegisterDto): Promise<AuthResponse> {
     const user = await this.usersService.create(signupDto);
 
     const token = this.getJwt(user.id);
@@ -30,7 +31,7 @@ export class AuthService {
     return { token, user };
   }
 
-  async login({ email, password }: LoginDto): Promise<any> {
+  async login({ email, password }: LoginDto): Promise<AuthResponse> {
     const user = await this.usersService.findOneByEmail(email);
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException([
