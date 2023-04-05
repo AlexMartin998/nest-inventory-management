@@ -24,6 +24,9 @@ export class User {
   @Column('text', { select: false })
   password: string;
 
+  @Column('bool', { name: 'is_active', default: true })
+  isActive: boolean;
+
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({
     name: 'user_roles',
