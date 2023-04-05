@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EnvConfiguration } from './config/app.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,8 @@ import { EnvConfiguration } from './config/app.config';
       synchronize: true,
       logging: true,
     }),
+
+    AuthModule,
   ],
   controllers: [],
   providers: [],
