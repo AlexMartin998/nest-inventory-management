@@ -1,6 +1,9 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
   IsString,
   Matches,
   MaxLength,
@@ -27,4 +30,9 @@ export class RegisterDto {
       'The password must have a Uppercase, lowercase letter and a number',
   })
   password: string;
+
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  role_id: number;
 }

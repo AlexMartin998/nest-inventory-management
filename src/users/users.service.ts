@@ -5,9 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
+import { Role } from '../auth/entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -17,6 +18,9 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
   ) {}
 
   async create(signupInput: CreateUserDto): Promise<User> {
@@ -25,6 +29,16 @@ export class UsersService {
         ...signupInput,
         password: bcrypt.hashSync(signupInput.password, 10),
       });
+
+      const role = await this.roleRepository.findOneBy({
+        id: signupInput.role_id ?? 2,
+      });
+      if (!role)
+        throw new NotFoundException([
+          `Role with id '${signupInput.role_id}' not found`,
+        ]);
+
+      user.roles = [role];
 
       user = await this.userRepository.save(user);
       delete user.password;
