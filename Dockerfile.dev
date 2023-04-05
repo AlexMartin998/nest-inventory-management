@@ -1,0 +1,10 @@
+FROM node:18-alpine as deps
+WORKDIR /app
+COPY . .
+
+
+
+FROM node:18-alpine as runner
+WORKDIR /app
+COPY --from=deps /app/ ./
+CMD ["npm", "run", "start:dev"]
