@@ -6,10 +6,13 @@ import { ProductMeasurement } from './entities/product-measurement.entity';
 
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import { StockInquiry } from './entities/stock-inquiries.entity';
 
 @Module({
   controllers: [ProductsController],
   providers: [ProductsService],
-  imports: [TypeOrmModule.forFeature([Product, ProductMeasurement])],
+  imports: [
+    TypeOrmModule.forFeature([Product, ProductMeasurement, StockInquiry]),
+  ],
 })
 export class ProductsModule {}
