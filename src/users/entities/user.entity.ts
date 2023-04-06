@@ -8,6 +8,7 @@ import {
 import { Role } from '../../auth/entities/role.entity';
 import { OneToMany } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
+import { Order } from '../../orders/entities/order.entity';
 
 @Entity('users')
 export class User {
@@ -48,4 +49,7 @@ export class User {
 
   @OneToMany(() => Product, (product) => product.user)
   products: Product[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }

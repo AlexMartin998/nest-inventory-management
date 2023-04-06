@@ -15,6 +15,7 @@ import { ProductMeasurement } from './product-measurement.entity';
 import { StockInquiry } from './stock-inquiries.entity';
 import { ProductChangeHistory } from './product-change-history.entity';
 import { createRandomSku } from '../../common/utils';
+import { OrderItem } from '../../orders/entities/order-item.entity';
 
 @Entity('products')
 export class Product {
@@ -61,6 +62,9 @@ export class Product {
     { eager: true, cascade: true },
   )
   changeHistory: ProductChangeHistory[];
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  orderItems: OrderItem[];
 
   @BeforeInsert()
   addProductCode() {
