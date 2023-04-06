@@ -10,6 +10,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { SeedModule } from './seed/seed.module';
 import { CommonModule } from './common/common.module';
 import { OrdersModule } from './orders/orders.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { OrdersModule } from './orders/orders.module';
     SeedModule,
     CommonModule,
     OrdersModule,
+    AddressesModule,
   ],
   controllers: [],
   providers: [],
