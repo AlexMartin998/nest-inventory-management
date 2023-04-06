@@ -27,7 +27,9 @@ export class User {
   @Column('bool', { name: 'is_active', default: true })
   isActive: boolean;
 
-  @ManyToMany(() => Role, (role) => role.users)
+  @ManyToMany(() => Role, (role) => role.users, {
+    eager: true,
+  })
   @JoinTable({
     name: 'user_roles',
     joinColumn: {
