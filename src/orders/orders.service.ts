@@ -16,6 +16,7 @@ import { AddressesService } from '../addresses/addresses.service';
 import { ProductsService } from '../products/products.service';
 import { CreateOrderDto, PaginatedOrders, UpdateOrderDto } from './dto';
 import { PaginationDto } from '../common/dto';
+import { Product } from '../products/entities/product.entity';
 
 @Injectable()
 export class OrdersService {
@@ -24,6 +25,8 @@ export class OrdersService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
 
     private readonly usersService: UsersService,
     private readonly addressesService: AddressesService,
@@ -65,6 +68,9 @@ export class OrdersService {
           if (product.price !== item.price)
             throw new UnauthorizedException('Prices do not match!');
 
+          if (product.stockInquiries[0].quantity < item.quantity)
+            throw new BadRequestException('Not enough products in stock');
+
           const orderItem = this.orderItemRepository.create({
             quantity: item.quantity,
             price: item.price,
@@ -73,11 +79,14 @@ export class OrdersService {
           });
           delete orderItem.order;
           order.items.push(orderItem);
+          product.stockInquiries[0].quantity -= item.quantity;
 
           order.totalAmount += orderItem.price * orderItem.quantity;
 
-          await queryRunner.manager.save(orderItem);
-          return orderItem;
+          // update product quantity
+          await queryRunner.manager.save(product);
+
+          return queryRunner.manager.save(orderItem);
         });
 
         const orderItems = await Promise.all(orderItemPromises);
@@ -129,7 +138,8 @@ export class OrdersService {
   }
 
   private handleDBErrors(error: any): never {
-    if (+error.status === 404 || +error.status === 401) throw error;
+    if (+error.status === 404 || +error.status === 401 || +error.status === 400)
+      throw error;
 
     if (error.code === '23505')
       throw new BadRequestException(error.detail.replace('Key ', ''));
