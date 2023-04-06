@@ -11,6 +11,7 @@ import { Category } from '../../categories/entities/category.entity';
 import { User } from '../../users/entities/user.entity';
 import { ProductMeasurement } from './product-measurement.entity';
 import { StockInquiry } from './stock-inquiries.entity';
+import { ProductChangeHistory } from './product-change-history.entity';
 
 @Entity('products')
 export class Product {
@@ -50,4 +51,11 @@ export class Product {
     cascade: true,
   })
   stockInquiries: StockInquiry[];
+
+  @OneToMany(
+    () => ProductChangeHistory,
+    (changeHistory) => changeHistory.product,
+    { eager: true, cascade: true },
+  )
+  changeHistory: ProductChangeHistory[];
 }
