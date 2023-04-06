@@ -3,11 +3,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { User } from '../../users/entities/user.entity';
 import { Category } from '../../categories/entities/category.entity';
+import { User } from '../../users/entities/user.entity';
+import { ProductMeasurement } from './product-measurement.entity';
 
 @Entity('products')
 export class Product {
@@ -34,4 +36,11 @@ export class Product {
   @ManyToOne(() => Category, (category) => category.products, { eager: true })
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @OneToMany(
+    () => ProductMeasurement,
+    (productMeasurement) => productMeasurement.product,
+    { eager: true, cascade: true },
+  )
+  productMeasurements: ProductMeasurement[];
 }
