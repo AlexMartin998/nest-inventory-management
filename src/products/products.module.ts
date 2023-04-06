@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Product } from './entities/product.entity';
+import { AuthModule } from '../auth/auth.module';
+import { CategoriesModule } from '../categories/categories.module';
+
+import { ProductChangeHistory } from './entities/product-change-history.entity';
 import { ProductMeasurement } from './entities/product-measurement.entity';
+import { Product } from './entities/product.entity';
+import { StockInquiry } from './entities/stock-inquiries.entity';
 
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { StockInquiry } from './entities/stock-inquiries.entity';
-import { ProductChangeHistory } from './entities/product-change-history.entity';
 
 @Module({
   controllers: [ProductsController],
@@ -19,6 +22,9 @@ import { ProductChangeHistory } from './entities/product-change-history.entity';
       StockInquiry,
       ProductChangeHistory,
     ]),
+
+    AuthModule,
+    CategoriesModule,
   ],
   exports: [TypeOrmModule, ProductsService],
 })
