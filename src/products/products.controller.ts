@@ -55,7 +55,7 @@ export class ProductsController {
 
   @Auth(ValidRoles.admin)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number, @GetUser('id') userId: number) {
+    return this.productsService.remove(id, userId);
   }
 }

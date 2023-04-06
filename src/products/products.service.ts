@@ -128,7 +128,11 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto, userId: number) {
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+    userId: number,
+  ): Promise<Product> {
     const {
       measurementUnitId,
       quantityId,
@@ -195,8 +199,10 @@ export class ProductsService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number, userId: number): Promise<void> {
+    const product = await this.findOne(id.toString(), userId);
+
+    await this.productRepository.remove(product);
   }
 
   private handleDBErrors(error: any): never {
