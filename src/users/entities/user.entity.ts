@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../../auth/entities/role.entity';
+import { OneToMany } from 'typeorm';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity('users')
 export class User {
@@ -27,6 +29,7 @@ export class User {
   @Column('bool', { name: 'is_active', default: true })
   isActive: boolean;
 
+  // relations
   @ManyToMany(() => Role, (role) => role.users, {
     eager: true,
   })
@@ -42,4 +45,7 @@ export class User {
     },
   })
   roles: Role[];
+
+  @OneToMany(() => Product, (product) => product.user)
+  products: Product[];
 }
