@@ -34,55 +34,63 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto, userId: number) {
     const { address_id, items } = createOrderDto;
 
-    const user = await this.usersService.findOne(userId);
-    const address = await this.addressesService.findOne(address_id);
+    const [user, address] = await Promise.all([
+      this.usersService.findOne(userId),
+      this.addressesService.findOne(address_id),
+    ]);
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const order = this.orderRepository.create({
+      ...createOrderDto,
+      user,
+      address,
+      date: new Date(),
+      totalAmount: 0,
+      items: [],
+    });
 
     try {
-      const order = this.orderRepository.create({
-        ...createOrderDto,
-        user,
-        address,
-        date: new Date(),
-        totalAmount: 0,
-        items: [],
-      });
+      const queryRunner = this.dataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-      let totalAmount = 0;
-      for (const item of items as any) {
-        const product = await this.productsService.findOne(
-          item.product_id,
-          userId,
-        );
+      try {
+        const orderItemPromises = items.map(async (item: any) => {
+          const product = await this.productsService.findOne(
+            item.product_id,
+            userId,
+          );
 
-        const orderItem = this.orderItemRepository.create({
-          quantity: item.quantity,
-          price: item.price,
-          order,
-          product,
+          const orderItem = this.orderItemRepository.create({
+            quantity: item.quantity,
+            price: item.price,
+            order,
+            product,
+          });
+          delete orderItem.order;
+          order.items.push(orderItem);
+
+          order.totalAmount += orderItem.price * orderItem.quantity;
+
+          await queryRunner.manager.save(orderItem);
+          return orderItem;
         });
-        delete orderItem.order;
-        order.items.push(orderItem);
 
-        totalAmount += orderItem.price * orderItem.quantity;
+        const orderItems = await Promise.all(orderItemPromises);
+        order.items = orderItems;
 
-        await queryRunner.manager.save(orderItem);
+        await queryRunner.manager.save(order);
+
+        await queryRunner.commitTransaction();
+
+        return order;
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        await queryRunner.release();
       }
-
-      order.totalAmount = totalAmount;
-      await queryRunner.manager.save(order);
-
-      await queryRunner.commitTransaction();
-
-      return order;
     } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
+      this.handleDBErrors(error);
     }
   }
 
