@@ -13,8 +13,9 @@ import { ProductMeasurement } from './entities/product-measurement.entity';
 import { Product } from './entities/product.entity';
 import { StockInquiry } from './entities/stock-inquiries.entity';
 
-import { CategoriesService } from 'src/categories/categories.service';
-import { CreateProductDto, UpdateProductDto } from './dto';
+import { CategoriesService } from '../categories/categories.service';
+import { CreateProductDto, PaginatedProducts, UpdateProductDto } from './dto';
+import { PaginationDto } from '../common/dto';
 
 @Injectable()
 export class ProductsService {
@@ -80,8 +81,22 @@ export class ProductsService {
     }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(
+    paginationDto: PaginationDto,
+    userId: number,
+  ): Promise<PaginatedProducts> {
+    const { limit, offset } = paginationDto;
+
+    const [products, count] = await Promise.all([
+      this.productRepository.find({
+        take: limit,
+        skip: offset,
+        where: { user: { id: userId } },
+      }),
+      this.productRepository.count({ where: { user: { id: userId } } }),
+    ]);
+
+    return { count, products };
   }
 
   findOne(id: number) {
