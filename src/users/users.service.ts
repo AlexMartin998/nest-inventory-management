@@ -9,10 +9,9 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 
 import { Role } from '../auth/entities/role.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -63,7 +62,13 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOneOrFail({
         where: { email },
-        select: { email: true, password: true, id: true, lastName: true },
+        select: {
+          email: true,
+          password: true,
+          id: true,
+          lastName: true,
+          roles: true,
+        },
       });
       return user;
     } catch (error) {

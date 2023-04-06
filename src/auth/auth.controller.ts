@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { RegisterDto, LoginDto } from './dto';
+import { Auth } from './decorators/auth.decorator';
+import { ValidRoles } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -16,5 +17,11 @@ export class AuthController {
   @Post('login')
   login(@Body() loginUserDto: LoginDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @Get('private')
+  @Auth(ValidRoles.admin)
+  someMethod() {
+    return 'Ok';
   }
 }
