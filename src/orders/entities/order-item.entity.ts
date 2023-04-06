@@ -17,7 +17,10 @@ export class OrderItem {
   @Column()
   quantity: number;
 
-  @ManyToOne(() => Product, (product) => product.orderItems)
+  @Column('float', { default: 0 })
+  price: number;
+
+  @ManyToOne(() => Product, (product) => product.orderItems, { eager: true })
   @JoinColumn({ name: 'product_id' })
   product: Product;
 

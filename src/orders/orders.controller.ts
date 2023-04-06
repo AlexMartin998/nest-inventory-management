@@ -10,14 +10,21 @@ import {
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { ValidRoles } from '../auth/interfaces';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @Auth(ValidRoles.user, ValidRoles.admin)
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  create(
+    @Body() createOrderDto: CreateOrderDto,
+    @GetUser('id') userId: number,
+  ) {
+    return this.ordersService.create(createOrderDto, userId);
   }
 
   @Get()
