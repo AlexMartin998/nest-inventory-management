@@ -42,3 +42,20 @@ export const SEED_CATEGORIES: Category[] = [
   { name: 'Lacteos' },
   { name: 'Productos sin lactosa' },
 ];
+
+export const SEED_PRODUCTS = [
+  {
+    title: 'Caja de Panes de Yuca',
+    category_id: 1,
+    unit: 'units per box',
+    quantity: 24,
+    price: 21,
+  },
+  {
+    title: 'Caja de Panes de Centeno',
+    category_id: 1,
+    unit: 'units per box',
+    quantity: 24,
+    price: 21,
+  },
+];

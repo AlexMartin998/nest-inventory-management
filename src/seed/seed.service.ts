@@ -2,13 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 
 import { Role } from '../auth/entities/role.entity';
 import { Category } from '../categories/entities/category.entity';
 import { ProductsService } from '../products/products.service';
 import { User } from '../users/entities/user.entity';
-import { SEED_CATEGORIES, SEED_ROLES, SEED_USERS } from './data';
+import { SEED_CATEGORIES, SEED_PRODUCTS, SEED_ROLES, SEED_USERS } from './data';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -45,6 +44,7 @@ export class SeedService {
     await this.insertRoles();
     const [admin] = await this.insertUsers();
     await this.insertCategories();
+    await this.insertProucts(admin);
 
     return { message: 'Seed executed' };
   }
@@ -100,12 +100,17 @@ export class SeedService {
     return this.roleRepository.save(roles);
   }
 
-  private async insertUsers(): Promise<any> {
-    const users = SEED_USERS.map(
-      async (user) => await this.usersService.create(user as any),
+  private async insertUsers(): Promise<any[]> {
+    const insertPromises = SEED_USERS.map((user) =>
+      this.usersService.create(user),
     );
+    const usersArr = [];
 
-    return users;
+    for await (const user of insertPromises) {
+      usersArr.push(user);
+    }
+
+    return usersArr;
   }
 
   private async insertCategories(): Promise<Category[]> {
@@ -116,5 +121,17 @@ export class SeedService {
     );
 
     return await this.categoryRepository.save(categories);
+  }
+
+  private async insertProucts(user: User) {
+    const insertPromises = [];
+
+    SEED_PRODUCTS.forEach((product) =>
+      insertPromises.push(this.productsService.create(product, user)),
+    );
+
+    await Promise.all(insertPromises);
+
+    return true;
   }
 }
