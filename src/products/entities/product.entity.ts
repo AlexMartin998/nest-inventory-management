@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -12,6 +14,7 @@ import { User } from '../../users/entities/user.entity';
 import { ProductMeasurement } from './product-measurement.entity';
 import { StockInquiry } from './stock-inquiries.entity';
 import { ProductChangeHistory } from './product-change-history.entity';
+import { createRandomSku } from '../../common/utils';
 
 @Entity('products')
 export class Product {
@@ -19,7 +22,7 @@ export class Product {
   id: number;
 
   @Column('text', { unique: true })
-  code: string;
+  sku: string;
 
   @Column('text', { unique: true })
   title: string;
@@ -58,4 +61,14 @@ export class Product {
     { eager: true, cascade: true },
   )
   changeHistory: ProductChangeHistory[];
+
+  @BeforeInsert()
+  addProductCode() {
+    if (!this.sku) this.sku = createRandomSku(this.category.name);
+  }
+
+  @BeforeUpdate()
+  updateProductCode() {
+    this.addProductCode();
+  }
 }
