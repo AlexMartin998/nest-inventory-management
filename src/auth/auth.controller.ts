@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto } from './dto';
+import { User } from '../users/entities/user.entity';
 import { Auth } from './decorators/auth.decorator';
-import { ValidRoles } from './interfaces';
+import { GetUser } from './decorators/get-user.decorator';
+import { RegisterDto, LoginDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,9 +20,9 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @Get('private')
-  @Auth(ValidRoles.admin)
-  someMethod() {
-    return 'Ok';
+  @Auth()
+  @Get('renew-token')
+  checkAuthStatus(@GetUser() user: User) {
+    return this.authService.checkAuthStatus(user);
   }
 }

@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { Role } from './entities/role.entity';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { RegisterDto, AuthResponse, LoginDto } from './dto';
 
@@ -47,6 +48,10 @@ export class AuthService {
     if (!role) throw new NotFoundException([`Role with id '${id}' not found`]);
 
     return role;
+  }
+
+  checkAuthStatus(user: User): AuthResponse {
+    return { user, token: this.getJwt(user.id) };
   }
 
   private getJwt(id: number) {
