@@ -54,6 +54,9 @@ export class SeedService {
     await queryRunner.connect();
 
     const allTables = [
+      'order_item',
+      'addresses',
+      'orders',
       'category',
       'product_change_history',
       'product_measurement',

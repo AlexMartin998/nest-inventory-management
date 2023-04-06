@@ -14,7 +14,8 @@ import { OrderItem } from './entities/order-item.entity';
 import { UsersService } from '../users/users.service';
 import { AddressesService } from '../addresses/addresses.service';
 import { ProductsService } from '../products/products.service';
-import { CreateOrderDto, UpdateOrderDto } from './dto';
+import { CreateOrderDto, PaginatedOrders, UpdateOrderDto } from './dto';
+import { PaginationDto } from '../common/dto';
 
 @Injectable()
 export class OrdersService {
@@ -98,12 +99,25 @@ export class OrdersService {
     }
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll(paginationDto: PaginationDto): Promise<PaginatedOrders> {
+    const { limit, offset } = paginationDto;
+
+    const [products, count] = await Promise.all([
+      this.orderRepository.find({
+        take: limit,
+        skip: offset,
+      }),
+      this.orderRepository.count(),
+    ]);
+
+    return { count, products };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: number): Promise<Order> {
+    const order = await this.orderRepository.findOneBy({ id });
+    if (!order) throw new NotFoundException(`Order with id: '${id}' not found`);
+
+    return order;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

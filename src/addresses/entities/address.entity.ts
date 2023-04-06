@@ -10,7 +10,7 @@ import {
 import { Order } from '../../orders/entities/order.entity';
 import { User } from './../../users/entities/user.entity';
 
-@Entity()
+@Entity('addresses')
 export class Address {
   @PrimaryGeneratedColumn()
   id: number;
