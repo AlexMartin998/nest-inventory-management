@@ -51,7 +51,7 @@ export class SeedService {
       'product_measurement',
       'products',
       'stock_inquiry',
-      // 'user_roles',
+      'user_roles',
       'roles',
       'users',
     ];
@@ -61,6 +61,8 @@ export class SeedService {
 
     try {
       allTables.forEach(async (tableName) => {
+        if (tableName.includes('role')) return;
+
         promisesArr.push(
           queryRunner.query(`TRUNCATE TABLE ${tableName} CASCADE`),
         );
