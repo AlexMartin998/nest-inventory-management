@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  npm:
+    image: node:18-alpine
+    user: ${DOCKER_USER}
+    build:
+      context: .
+      dockerfile: Dockerfile.devcontainers
+      target: deps
+    container_name: test-app-npm
+    volumes:
+      - .:/code
+    # command: npm install
+
+  nest:
+    build:
+      context: .
+      dockerfile: Dockerfile.devcontainers
+      target: runner
+    image: test_app:1.0.1
+    user: ${DOCKER_USER}
+    container_name: nest_app
+    volumes:
+      - .:/code
+      - ./:/workspace:cached
+    ports:
+      - 3000:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      npm:
+        condition: service_completed_successfully
+
+  postgres:
+    image: postgres:14.6
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    container_name: inventory_db
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    user: postgres
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+volumes:
+  postgres_db:

@@ -1,0 +1,16 @@
+FROM node:18-alpine as deps
+WORKDIR /code
+COPY package.json pnpm-lock.yaml ./
+RUN npm i -g pnpm
+# RUN pnpm install
+CMD [ "pnpm", "i" ]
+# CMD [ "npm", "install" ]
+# CMD [ "pnpm", "store", "prune" ]
+
+
+
+FROM node:18-alpine as runner
+WORKDIR /code
+# COPY . .
+RUN npm i -g pnpm
+CMD ["npm", "run", "start:dev"]
