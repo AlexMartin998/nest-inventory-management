@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SeedModule } from './seed/seed.module';
 import { CommonModule } from './common/common.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CommonModule } from './common/common.module';
     CategoriesModule,
     SeedModule,
     CommonModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
