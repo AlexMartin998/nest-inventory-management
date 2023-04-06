@@ -9,17 +9,21 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
   @IsEmail()
+  @ApiProperty()
   email: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty()
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty()
   lastName: string;
 
   @IsString()
@@ -29,10 +33,12 @@ export class RegisterDto {
     message:
       'The password must have a Uppercase, lowercase letter and a number',
   })
+  @ApiProperty()
   password: string;
 
   @IsNumber()
   @IsPositive()
   @IsOptional()
+  @ApiProperty({ nullable: true })
   role_id: number;
 }

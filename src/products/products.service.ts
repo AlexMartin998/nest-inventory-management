@@ -246,8 +246,6 @@ export class ProductsService {
       id,
       quantity,
     });
-    // if (!stockInquiry)
-    //   throw new NotFoundException(`Stock Inquiry with id: '${id}' not found`);
 
     return await this.stockInquiryRepository.save(stockInquiry);
   }
