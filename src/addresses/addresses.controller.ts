@@ -8,12 +8,14 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Auth, GetUser } from '../auth/decorators';
 import { AddressesService } from './addresses.service';
 import { CreateAddressDto, UpdateAddressDto } from './dto';
 import { ValidRoles } from './../auth/interfaces';
 
+@ApiTags('Addresses')
 @Controller('addresses')
 export class AddressesController {
   constructor(private readonly addressesService: AddressesService) {}

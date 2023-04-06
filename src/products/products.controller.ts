@@ -9,19 +9,28 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { User } from '../users/entities/user.entity';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto } from './dto';
-import { ValidRoles } from '../auth/interfaces';
 import { PaginationDto } from '../common/dto';
+import { ValidRoles } from '../auth/interfaces';
+import { Product } from './entities/product.entity';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @ApiResponse({
+    status: 201,
+    description: 'Product was created',
+    type: Product,
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   @Auth(ValidRoles.admin)
   @Post()
   create(@Body() createProductDto: CreateProductDto, @GetUser() user: User) {

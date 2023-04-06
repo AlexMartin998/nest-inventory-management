@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Auth } from '../auth/decorators/auth.decorator';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -17,6 +18,7 @@ import { CreateOrderDto, UpdateOrderDto } from './dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { ValidRoles } from '../auth/interfaces';
 
+@ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}

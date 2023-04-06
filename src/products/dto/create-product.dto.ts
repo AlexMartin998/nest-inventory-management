@@ -16,6 +16,7 @@ export class CreateProductDto {
     description: 'Product title (unique)',
     nullable: false,
     minLength: 3,
+    uniqueItems: true,
   })
   title: string;
 
@@ -23,21 +24,33 @@ export class CreateProductDto {
   @IsPositive()
   @IsOptional()
   @ApiProperty()
-  price?: number;
+  price: number;
 
   @IsNumber()
   @IsPositive()
+  @ApiProperty()
   category_id: number;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    description: 'Product measurement',
+    nullable: false,
+    example: 'units',
+  })
   unit: string;
 
   @IsNumber()
   @IsPositive()
+  @ApiProperty({
+    description: 'Stock inquiries',
+    nullable: false,
+    example: 'units',
+  })
   quantity: number;
 
   @IsString()
   @IsOptional()
-  code?: string;
+  @ApiProperty({ nullable: true })
+  sku?: string;
 }
