@@ -9,28 +9,34 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { User } from '../users/entities/user.entity';
+import { Product } from './entities/product.entity';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { GetUser } from '../auth/decorators/get-user.decorator';
+import { ApiDocumentation } from './../common/decorators';
 import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto } from './dto';
 import { PaginationDto } from '../common/dto';
 import { ValidRoles } from '../auth/interfaces';
-import { Product } from './entities/product.entity';
 
 @ApiTags('Products')
+@ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'Product was created',
-    type: Product,
-  })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiDocumentation(
+    { status: 201, description: 'Product successfully created', type: Product },
+    { status: 400, description: 'Bad Request' },
+    { status: 401, description: 'Unauthorized' },
+    { status: 500, description: 'Internal server error' },
+    {
+      status: 403,
+      description: 'Forbidden. Does not have the necessary permits',
+    },
+  )
   @Auth(ValidRoles.admin)
   @Post()
   create(@Body() createProductDto: CreateProductDto, @GetUser() user: User) {
