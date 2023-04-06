@@ -24,7 +24,7 @@ import { UsersModule } from './users/users.module';
 
       autoLoadEntities: true,
       synchronize: true,
-      logging: true,
+      // logging: true,
     }),
 
     AuthModule,
