@@ -1,1 +1,7 @@
-export class CreateAddressDto {}
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+export class CreateAddressDto {
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  name: string;
+}

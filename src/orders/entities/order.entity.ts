@@ -9,6 +9,7 @@ import { OneToMany } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
 import { OrderItem } from './order-item.entity';
+import { Address } from '../../addresses/entities/address.entity';
 
 @Entity()
 export class Order {
@@ -30,4 +31,8 @@ export class Order {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { eager: true })
   items: OrderItem[];
+
+  @ManyToOne(() => Address, (address) => address.orders)
+  @JoinColumn({ name: 'address_id' })
+  address: Address;
 }
