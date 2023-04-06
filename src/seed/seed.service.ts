@@ -9,6 +9,7 @@ import { Category } from '../categories/entities/category.entity';
 import { ProductsService } from '../products/products.service';
 import { User } from '../users/entities/user.entity';
 import { SEED_CATEGORIES, SEED_ROLES, SEED_USERS } from './data';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class SeedService {
@@ -28,6 +29,7 @@ export class SeedService {
     private readonly categoryRepository: Repository<Category>,
 
     private readonly productsService: ProductsService,
+    private readonly usersService: UsersService,
   ) {
     this.isDev =
       configService.get<string>('stage') === 'dev' &&
@@ -98,16 +100,12 @@ export class SeedService {
     return this.roleRepository.save(roles);
   }
 
-  private async insertUsers(): Promise<User[]> {
-    const users: User[] = [];
+  private async insertUsers(): Promise<any> {
+    const users = SEED_USERS.map(
+      async (user) => await this.usersService.create(user as any),
+    );
 
-    SEED_USERS.forEach((user) => {
-      user.password = bcrypt.hashSync(user.password, 10);
-
-      users.push(this.userRepository.create(user));
-    });
-
-    return await this.userRepository.save(users);
+    return users;
   }
 
   private async insertCategories(): Promise<Category[]> {

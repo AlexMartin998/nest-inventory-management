@@ -13,7 +13,7 @@ export const SEED_USERS = [
     email: 'adrian@test.com',
     password: '123123qweQWE',
     isActive: true,
-    role: 1,
+    role_id: 1,
   },
   {
     name: 'Alex',
@@ -21,7 +21,7 @@ export const SEED_USERS = [
     email: 'alex@test.com',
     password: '123123qweQWE',
     isActive: true,
-    role: 2,
+    role_id: 2,
   },
   {
     name: 'John',
@@ -29,7 +29,7 @@ export const SEED_USERS = [
     email: 'john@test.com',
     password: '123123qweQWE',
     isActive: true,
-    role: 3,
+    role_id: 3,
   },
 ];
 
