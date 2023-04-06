@@ -49,7 +49,7 @@ export const SEED_PRODUCTS = [
     category_id: 1,
     unit: 'units per box',
     quantity: 24,
-    price: 21,
+    price: 54,
   },
   {
     title: 'Caja de Panes de Centeno',

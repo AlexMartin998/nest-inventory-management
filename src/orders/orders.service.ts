@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
@@ -12,8 +13,8 @@ import { OrderItem } from './entities/order-item.entity';
 
 import { UsersService } from '../users/users.service';
 import { AddressesService } from '../addresses/addresses.service';
-import { CreateOrderDto, UpdateOrderDto } from './dto';
 import { ProductsService } from '../products/products.service';
+import { CreateOrderDto, UpdateOrderDto } from './dto';
 
 @Injectable()
 export class OrdersService {
@@ -59,6 +60,9 @@ export class OrdersService {
             item.product_id,
             userId,
           );
+
+          if (product.price !== item.price)
+            throw new UnauthorizedException('Prices do not match!');
 
           const orderItem = this.orderItemRepository.create({
             quantity: item.quantity,

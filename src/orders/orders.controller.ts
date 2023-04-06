@@ -8,10 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 
+import { Auth } from '../auth/decorators/auth.decorator';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
-import { GetUser } from '../auth/decorators/get-user.decorator';
-import { Auth } from '../auth/decorators/auth.decorator';
 import { ValidRoles } from '../auth/interfaces';
 
 @Controller('orders')
