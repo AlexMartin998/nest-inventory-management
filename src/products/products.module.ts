@@ -20,5 +20,6 @@ import { ProductChangeHistory } from './entities/product-change-history.entity';
       ProductChangeHistory,
     ]),
   ],
+  exports: [TypeOrmModule, ProductsService],
 })
 export class ProductsModule {}

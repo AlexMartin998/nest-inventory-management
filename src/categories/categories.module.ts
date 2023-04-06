@@ -10,5 +10,6 @@ import { CategoriesService } from './categories.service';
   controllers: [CategoriesController],
   providers: [CategoriesService],
   imports: [TypeOrmModule.forFeature([Category])],
+  exports: [TypeOrmModule, CategoriesService],
 })
 export class CategoriesModule {}
