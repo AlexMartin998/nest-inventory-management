@@ -38,8 +38,8 @@ export class ProductsController {
 
   @Auth(ValidRoles.admin)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  findOne(@Param('id') id: string, @GetUser('id') userId: number) {
+    return this.productsService.findOne(id, userId);
   }
 
   @Auth(ValidRoles.admin)

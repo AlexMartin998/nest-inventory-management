@@ -99,8 +99,32 @@ export class ProductsService {
     return { count, products };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(term: string, userId: number): Promise<Product> {
+    let product: Product;
+    if (isFinite(+term))
+      product = await this.productRepository.findOneBy({
+        id: +term,
+        user: { id: userId },
+      });
+    else {
+      const queryBuilder = this.productRepository.createQueryBuilder('product');
+
+      product = await queryBuilder
+        .where('UPPER(title) =:title or sku =:sku', {
+          title: term.toUpperCase(),
+          sku: term.toLowerCase(),
+        })
+        .andWhere(`"user_id" =:userId`, { userId: userId })
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.productMeasurements', 'productMeasurements')
+        .leftJoinAndSelect('product.stockInquiries', 'stockInquiries')
+        .getOne();
+    }
+
+    if (!product)
+      throw new NotFoundException(`Product with '${term}' not found`);
+
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
