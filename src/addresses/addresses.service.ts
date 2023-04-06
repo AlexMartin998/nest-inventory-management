@@ -46,8 +46,12 @@ export class AddressesService {
     return `This action returns all addresses`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} address`;
+  async findOne(id: number): Promise<Address> {
+    const address = await this.addressRepository.findOneBy({ id });
+    if (!address)
+      throw new NotFoundException(`Address with id: '${id}' not found`);
+
+    return address;
   }
 
   update(id: number, updateAddressDto: UpdateAddressDto) {

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -32,8 +33,8 @@ export class AddressesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.addressesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.addressesService.findOne(id);
   }
 
   @Patch(':id')
