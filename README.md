@@ -85,3 +85,9 @@ docker compose -f docker-compose.dev.yml down
 # compose
 docker compose up --build
 ```
+
+## Documentation
+
+```bash
+curl http://localhost:3000/api
+```

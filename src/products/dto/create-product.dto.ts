@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumber,
@@ -11,11 +12,17 @@ export class CreateProductDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
+  @ApiProperty({
+    description: 'Product title (unique)',
+    nullable: false,
+    minLength: 3,
+  })
   title: string;
 
   @IsNumber()
   @IsPositive()
   @IsOptional()
+  @ApiProperty()
   price?: number;
 
   @IsNumber()
