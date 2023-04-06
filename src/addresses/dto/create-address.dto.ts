@@ -3,5 +3,20 @@ export class CreateAddressDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
-  name: string;
+  street: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  zipCode: string;
 }
