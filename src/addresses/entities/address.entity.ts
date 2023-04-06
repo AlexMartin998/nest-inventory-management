@@ -27,6 +27,9 @@ export class Address {
   @Column('text', { name: 'zip_code' })
   zipCode: string;
 
+  @Column('text')
+  phone: string;
+
   @ManyToOne(() => User, (user) => user.addresses)
   @JoinColumn({ name: 'user_id' })
   user: User;

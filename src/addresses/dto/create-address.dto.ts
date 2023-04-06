@@ -19,4 +19,9 @@ export class CreateAddressDto {
   @MinLength(3)
   @IsNotEmpty()
   zipCode: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  phone: string;
 }
