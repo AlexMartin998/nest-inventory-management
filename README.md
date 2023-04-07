@@ -75,6 +75,14 @@ docker compose -f docker-compose.dev.yml up --build
 docker compose -f docker-compose.dev.yml down
 ```
 
+### Executing SEED
+
+```bash
+# HTTP Get request
+
+curl http://localhost:3000/api/seed
+```
+
 ### Prod Env
 
 - Configure the app to run in prod
