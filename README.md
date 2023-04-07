@@ -99,3 +99,17 @@ docker compose up --build
 ```bash
 curl http://localhost:3000/api
 ```
+
+## View demo
+
+Log in with:
+
+- Admin: `adrian@test.com` and password `123123qweQWE`
+- User/Client: `alex@test.com` and password `123123qweQWE`
+- Delivery: `john@test.com` and password `123123qweQWE`
+
+```bash
+# url
+
+https://bakery-api-adrian.onrender.com/api
+```
